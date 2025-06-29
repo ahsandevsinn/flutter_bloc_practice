@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc_practice/bloc/counter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_practice/bloc/counter_event.dart';
+import 'package:flutter_bloc_practice/bloc/counter_state.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -11,11 +14,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    return BlocProvider(
+      create: (_) => CounterBloc(),
+      child :  const MaterialApp(
+          title: 'Flutter Demo',
+          
+          home: MyHomePage(title: 'Flutter Demo Home Page'),
+        )
     );
+    
   }
 }
 
@@ -48,13 +55,31 @@ class _MyHomePageState extends State<MyHomePage> {
          
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              "",
+            
+            BlocBuilder<CounterBloc,CounterState>(builder: (context,state){
+              return Text(
+              state.count.toString(),
               style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            );
+            }),
+            SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(onPressed: (){
+context.read<CounterBloc>().add(IncrementEvent());
+                }, child: Text(
+              "Add",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),),
+              ElevatedButton(onPressed: (){
+
+                }, child: Text(
+              "Remove",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),)
+              ],
+            )
           ],
         ),
       ),
